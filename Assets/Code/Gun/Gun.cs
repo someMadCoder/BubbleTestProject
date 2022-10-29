@@ -9,9 +9,9 @@ namespace Code.Gun
     {
         [SerializeField] private LaserPointer _laserPointer;
 
-        [SerializeField] private Camera _camera;
+        private Camera _camera;
 
-        [SerializeField] private IInputService _inputService;
+        private IInputService _inputService;
 
         public void Init(Camera playerCamera, IInputService inputService)
         {

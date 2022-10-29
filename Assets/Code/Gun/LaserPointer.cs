@@ -10,7 +10,8 @@ namespace Code.Gun
         private bool isOn = false;
         public void TurnOn()
         {
-            isOn = true;
+            isOn = true;                Debug.Log("111111111");
+
             StartCoroutine(Working());
         }
         public void TurnOff()
@@ -22,6 +23,7 @@ namespace Code.Gun
         {
             while (isOn)
             {
+                Debug.Log("111111111");
                 DrawRay();
                 // if (LaserHitsBallGrid())
                 // {

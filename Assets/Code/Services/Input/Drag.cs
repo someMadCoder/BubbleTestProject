@@ -11,11 +11,11 @@ namespace Code.Services.Input
         {
             EventTrigger trigger = GetComponent<EventTrigger>();
             
-            // EventTrigger.Entry onPointerDownEntry = new EventTrigger.Entry
-            // {
-            //     eventID = EventTriggerType.PointerDown
-            // };
-            // onPointerDownEntry.callback.AddListener(_ => OnPointerDown());
+            EventTrigger.Entry onPointerDownEntry = new EventTrigger.Entry
+            {
+                eventID = EventTriggerType.PointerDown
+            };
+            onPointerDownEntry.callback.AddListener(_ => OnPointerDown());
             
             EventTrigger.Entry onDragEntry = new EventTrigger.Entry
             {
@@ -23,15 +23,15 @@ namespace Code.Services.Input
             };
             onDragEntry.callback.AddListener((data) => OnDrag((PointerEventData)data));
             
-            // EventTrigger.Entry onPointerUpEntry = new EventTrigger.Entry
-            // {
-            //     eventID = EventTriggerType.PointerUp
-            // };
-            // onPointerUpEntry.callback.AddListener((_) => OnPointerUp());
+            EventTrigger.Entry onPointerUpEntry = new EventTrigger.Entry
+            {
+                eventID = EventTriggerType.PointerUp
+            };
+            onPointerUpEntry.callback.AddListener((_) => OnPointerUp());
             
-            // trigger.triggers.Add(onPointerDownEntry);
+            trigger.triggers.Add(onPointerDownEntry);
             trigger.triggers.Add(onDragEntry);
-            // trigger.triggers.Add(onPointerUpEntry);
+            trigger.triggers.Add(onPointerUpEntry);
         }
             
         private void OnPointerDown()
