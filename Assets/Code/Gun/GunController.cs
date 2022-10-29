@@ -5,18 +5,19 @@ using UnityEngine;
 
 namespace Code.Gun
 {
-    public class Gun: MonoBehaviour
+    public class GunController: MonoBehaviour
     {
-        [SerializeField] private LaserPointer _laserPointer;
-
+        [SerializeField] private GunBehaviour _gun;
         private Camera _camera;
 
         private IInputService _inputService;
+        [SerializeField] private LaserPointer _laserPointer;
 
         public void Init(Camera playerCamera, IInputService inputService)
         {
             _camera = playerCamera;
             _inputService = inputService;
+            _laserPointer.Init(_camera);
             SubscribeInputEvents();
         }
 
@@ -29,7 +30,7 @@ namespace Code.Gun
 
         private void OnPointerDown()
         {
-            _laserPointer.TurnOn();
+            _gun.TurnOnLaser();
         }
 
         private void OnDrag(Vector2 pointerPosition)
@@ -41,13 +42,13 @@ namespace Code.Gun
         {
             Vector3 targetPoint = _camera.ScreenToWorldPoint(pointerPosition);
             targetPoint.z = transform.position.z;
-            transform.right = -(transform.position - targetPoint).normalized;
+            _gun.AimOn(targetPoint);
         }
 
 
         private void OnPointerUp()
         {
-            _laserPointer.TurnOff();
+            _gun.TurnOffLaser();
         }
     }
 }

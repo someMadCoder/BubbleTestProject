@@ -42,7 +42,6 @@ namespace Code.Services.Input
         private void OnDrag(PointerEventData eventData)
         {
             SimpleInput.OnDrag?.Invoke(UnityEngine.Input.mousePosition);
-            Debug.Log("работает блять");
 
         }
 

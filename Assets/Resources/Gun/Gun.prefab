@@ -95,6 +95,7 @@ GameObject:
   - component: {fileID: 451644786581797038}
   - component: {fileID: 451644786581797039}
   - component: {fileID: 451644786581797036}
+  - component: {fileID: -6963305783710455751}
   m_Layer: 0
   m_Name: Gun
   m_TagString: Untagged
@@ -184,8 +185,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5c2f1741ee74d2daafa303b237e96bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _gun: {fileID: -6963305783710455751}
   _laserPointer: {fileID: 1623182494433046463}
-  _camera: {fileID: 0}
+--- !u!114 &-6963305783710455751
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 451644786581797037}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4563981eeb9e4661bcabc0821fbff477, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _laserPointer: {fileID: 1623182494433046463}
 --- !u!1 &451644786851506224
 GameObject:
   m_ObjectHideFlags: 0

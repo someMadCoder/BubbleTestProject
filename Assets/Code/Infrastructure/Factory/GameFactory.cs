@@ -24,7 +24,7 @@ namespace Code.Infrastructure.Factory
         {
             Camera camera = GetCamera();
             GameObject gun = _assetProvider.Instantiate(AssetsPath.GunPath);
-            gun.GetComponent<Gun.Gun>().Init(camera, AllServices.Container.Single<IInputService>());
+            gun.GetComponent<Gun.GunController>().Init(camera, AllServices.Container.Single<IInputService>());
         }
 
         private Camera GetCamera()
