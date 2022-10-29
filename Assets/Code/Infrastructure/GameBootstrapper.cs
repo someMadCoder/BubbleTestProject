@@ -1,4 +1,4 @@
-using Code.Infrastructure.States;
+using Code.Infrastructure.GameStates;
 using UnityEngine;
 
 namespace Code.Infrastructure

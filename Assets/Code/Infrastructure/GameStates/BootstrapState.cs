@@ -3,7 +3,7 @@ using Code.Infrastructure.Factory;
 using Code.Infrastructure.Services;
 using Code.Services.Input;
 
-namespace Code.Infrastructure.States
+namespace Code.Infrastructure.GameStates
 {
     public class BootstrapState : IState
     {
@@ -27,7 +27,7 @@ namespace Code.Infrastructure.States
 
         private void EnterLoadLevel()
         {
-            _stateMachine.Enter<LoadLevelState, string>(MainMenu);
+            _stateMachine.Enter<LoadMainMenuState, string>(MainMenu);
         }
 
         public void Exit()
@@ -37,7 +37,7 @@ namespace Code.Infrastructure.States
 
         private void RegisterServices()
         {
-            _services.RegisterSingle<IInputService>(new TouchInputService());
+            _services.RegisterSingle<IInputService>(new InputService());
             _services.RegisterSingle<IAssetProvider>(new AssetProvider());
             _services.RegisterSingle<IGameFactory>(
                 new GameFactory(_services.Single<IAssetProvider>()));

@@ -4,5 +4,7 @@
     {
         public const string BackgroundPath = "Hud/Background";
         public const string HUDPath = "Hud/Hud";
+        public const string GunPath = "Gun/Gun";
+        public const string CameraPath = "Hud/Camera";
     }
 }

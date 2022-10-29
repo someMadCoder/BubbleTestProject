@@ -1,41 +1,53 @@
-﻿using Code.Infrastructure.Services;
+﻿using System;
+using Code.Infrastructure.Services;
 using Code.Services.Input;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace Code.Gun
 {
     public class Gun: MonoBehaviour
     {
         [SerializeField] private LaserPointer _laserPointer;
-        [SerializeField] private UnityEngine.Camera _camera;
-        private IInputService _inputService;
-        
-        private void Awake()
+
+        [SerializeField] private Camera _camera;
+
+        [SerializeField] private IInputService _inputService;
+
+        public void Init(Camera playerCamera, IInputService inputService)
         {
-            _inputService = AllServices.Container.Single<IInputService>();
-            _inputService.OnStartDrag += OnStartDrag;
-            _inputService.OnDrag += OnDrag;
-            _inputService.OnEndDrag += OnEndDrag;
+            _camera = playerCamera;
+            _inputService = inputService;
+            SubscribeInputEvents();
         }
 
-        private void OnStartDrag()
+        private void SubscribeInputEvents()
         {
-            
+            _inputService.OnPointerDown += OnPointerDown;
+            _inputService.OnDrag += OnDrag;
+            _inputService.OnPointerUp += OnPointerUp;
         }
-        
-        private void OnDrag(PointerEventData eventData)
+
+        private void OnPointerDown()
         {
-            Vector3 targetPoint = _camera.ScreenToWorldPoint(eventData.position);
+            _laserPointer.TurnOn();
+        }
+
+        private void OnDrag(Vector2 pointerPosition)
+        {
+            RotateTo(pointerPosition);
+        }
+
+        private void RotateTo(Vector2 pointerPosition)
+        {
+            Vector3 targetPoint = _camera.ScreenToWorldPoint(pointerPosition);
             targetPoint.z = transform.position.z;
             transform.right = -(transform.position - targetPoint).normalized;
         }
 
 
-        private void OnEndDrag()
+        private void OnPointerUp()
         {
             _laserPointer.TurnOff();
         }
-        
     }
 }

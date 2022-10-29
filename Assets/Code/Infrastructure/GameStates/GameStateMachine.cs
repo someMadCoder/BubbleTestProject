@@ -4,7 +4,7 @@ using Code.Infrastructure.Factory;
 using Code.Infrastructure.Services;
 using UnityEngine;
 
-namespace Code.Infrastructure.States
+namespace Code.Infrastructure.GameStates
 {
     public class GameStateMachine
     {
@@ -16,8 +16,9 @@ namespace Code.Infrastructure.States
             _states = new Dictionary<Type, IExitableState>()
             {
                 [typeof(BootstrapState)] = new BootstrapState(this, sceneLoader, services),
+                [typeof(LoadMainMenuState)] = new LoadMainMenuState(this, sceneLoader),
                 [typeof(LoadLevelState)] = new LoadLevelState(this, sceneLoader, services.Single<IGameFactory>()),
-                [typeof(GameLoopState)] = new GameLoopState(this, sceneLoader),
+                [typeof(GameLoopState)] = new GameLoopState(this, sceneLoader, services.Single<IGameFactory>()),
             };
         }
 
@@ -39,6 +40,7 @@ namespace Code.Infrastructure.States
             _activeState?.Exit();
             TState state = GetState<TState>();
             _activeState = state;
+            Debug.Log(_activeState);
             return state;
         }
 
@@ -46,34 +48,5 @@ namespace Code.Infrastructure.States
         {
             return _states[typeof(TState)] as TState;
         }
-    }
-
-    public class GameLoopState : IPayLoadedState<Level>
-    {
-        public GameLoopState(GameStateMachine gameStateMachine, SceneLoader sceneLoader)
-        {
-        }
-
-        public void Enter(Level level)
-        {
-            
-        }
-
-        public void Exit()
-        {
-            
-        }
-    }
-
-    public class Level: ScriptableObject
-    {
-        [SerializeField] private int _number;
-        [SerializeField] private LevelMap _map;
-        [SerializeField] private Sprite _background;
-    }
-
-    internal class LevelMap:ScriptableObject
-    {
-        
     }
 }

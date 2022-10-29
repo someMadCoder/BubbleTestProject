@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Code.Camera
+namespace Code.CameraLogic
 {
     /// <summary>
     /// Keeps constant camera width instead of height, works for both Orthographic & Perspective cameras

@@ -1,6 +1,6 @@
 ﻿using Code.Infrastructure.Factory;
 
-namespace Code.Infrastructure.States
+namespace Code.Infrastructure.GameStates
 {
     public class LoadLevelState : IPayLoadedState<string>
     {
@@ -29,6 +29,7 @@ namespace Code.Infrastructure.States
         {
             _gameFactory.CreateHUD();
             _gameFactory.CreateBackground();
+            _gameFactory.CreateGun();
             _stateMachine.Enter<GameLoopState, Level>(null);
         }
 

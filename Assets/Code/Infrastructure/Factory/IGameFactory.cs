@@ -6,5 +6,6 @@ namespace Code.Infrastructure.Factory
     {
         void CreateBackground();
         void CreateHUD();
+        void CreateGun();
     }
 }
