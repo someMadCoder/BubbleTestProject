@@ -10,10 +10,8 @@ namespace Code.Gun
     {
         [SerializeField] private GunBehaviour _gun;
         private Camera _camera;
-
         private IInputService _inputService;
-        [SerializeField] private LaserPointer _laserPointer;
-
+        
         public void Init(Camera playerCamera, IInputService inputService)
         {
             _camera = playerCamera;
