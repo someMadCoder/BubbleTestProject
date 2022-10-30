@@ -1,6 +1,7 @@
 ﻿using System;
 using Code.Infrastructure.Services;
 using Code.Services.Input;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Code.Gun
@@ -17,7 +18,6 @@ namespace Code.Gun
         {
             _camera = playerCamera;
             _inputService = inputService;
-            _laserPointer.Init(_camera);
             SubscribeInputEvents();
         }
 
@@ -28,9 +28,14 @@ namespace Code.Gun
             _inputService.OnPointerUp += OnPointerUp;
         }
 
-        private void OnPointerDown()
+        private void OnPointerDown(Vector2 pointerPosition)
         {
-            _gun.TurnOnLaser();
+            _gun.TurnOnLaser(pointerPosition);
+        }
+
+        private void OnPointerUp(Vector2 pointerPosition)
+        {
+            _gun.TurnOffLaser();
         }
 
         private void OnDrag(Vector2 pointerPosition)
@@ -46,9 +51,5 @@ namespace Code.Gun
         }
 
 
-        private void OnPointerUp()
-        {
-            _gun.TurnOffLaser();
-        }
     }
 }

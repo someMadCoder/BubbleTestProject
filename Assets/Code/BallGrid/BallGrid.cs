@@ -7,7 +7,7 @@ using Random = UnityEngine.Random;
 
 namespace Code.BallGridLogic
 {
-    internal class BallGrid: MonoBehaviour
+    public class BallGrid: MonoBehaviour
     {
         [SerializeField]private Ball _ball;
         [SerializeField]private GameObject _estimatedHitMarker;
@@ -67,6 +67,7 @@ namespace Code.BallGridLogic
                 {
                     Ball newBall = Instantiate(_ball, origin.transform.position + neighborsOffsets[n], Quaternion.identity);
                     newBall.transform.parent = transform;
+                    newBall.Grid = this;
                     Construct(newBall);
                 }
             }

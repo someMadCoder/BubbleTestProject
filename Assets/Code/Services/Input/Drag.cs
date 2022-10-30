@@ -15,7 +15,7 @@ namespace Code.Services.Input
             {
                 eventID = EventTriggerType.PointerDown
             };
-            onPointerDownEntry.callback.AddListener(_ => OnPointerDown());
+            onPointerDownEntry.callback.AddListener((data) => OnPointerDown((PointerEventData)data));
             
             EventTrigger.Entry onDragEntry = new EventTrigger.Entry
             {
@@ -27,16 +27,16 @@ namespace Code.Services.Input
             {
                 eventID = EventTriggerType.PointerUp
             };
-            onPointerUpEntry.callback.AddListener((_) => OnPointerUp());
+            onPointerUpEntry.callback.AddListener((data) => OnPointerUp((PointerEventData)data));
             
             trigger.triggers.Add(onPointerDownEntry);
             trigger.triggers.Add(onDragEntry);
             trigger.triggers.Add(onPointerUpEntry);
         }
             
-        private void OnPointerDown()
+        private void OnPointerDown(PointerEventData eventData)
         {
-            SimpleInput.OnPointerDown?.Invoke();
+            SimpleInput.OnPointerDown?.Invoke(UnityEngine.Input.mousePosition);
         }
 
         private void OnDrag(PointerEventData eventData)
@@ -45,9 +45,9 @@ namespace Code.Services.Input
 
         }
 
-        private void OnPointerUp()
+        private void OnPointerUp(PointerEventData eventData)
         {
-            SimpleInput.OnPointerUp?.Invoke();
+            SimpleInput.OnPointerUp?.Invoke(UnityEngine.Input.mousePosition);
         }
     }
 }

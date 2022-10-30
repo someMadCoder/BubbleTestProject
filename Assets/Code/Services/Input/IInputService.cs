@@ -7,8 +7,8 @@ namespace Code.Services.Input
 {
     public interface IInputService: IService
     {
-        public Action OnPointerDown { get; set; }
-        public Action OnPointerUp { get; set; }
+        public Action<Vector2> OnPointerDown { get; set; }
+        public Action<Vector2> OnPointerUp { get; set; }
         public Action<Vector2> OnDrag { get; set; }
     }
 }

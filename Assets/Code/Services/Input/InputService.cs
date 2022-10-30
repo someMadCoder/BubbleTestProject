@@ -6,7 +6,7 @@ namespace Code.Services.Input
 {
     public class InputService : IInputService
     {
-        public Action OnPointerDown
+        public Action<Vector2> OnPointerDown
         {
             get => SimpleInput.OnPointerDown;
             set => SimpleInput.OnPointerDown = value;
@@ -14,16 +14,11 @@ namespace Code.Services.Input
 
         public Action<Vector2> OnDrag
         {
-            get { 
-                Debug.Log("OnDragInputService");
-
-            return SimpleInput.OnDrag;
+            get =>SimpleInput.OnDrag;
+            set => SimpleInput.OnDrag = value;
         }
 
-        set => SimpleInput.OnDrag = value;
-        }
-
-        public Action OnPointerUp
+        public Action<Vector2> OnPointerUp
         {
             get => SimpleInput.OnPointerUp;
             set => SimpleInput.OnPointerUp= value;
