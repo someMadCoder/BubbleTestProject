@@ -40,7 +40,6 @@ namespace Code.Infrastructure.GameStates
             _activeState?.Exit();
             TState state = GetState<TState>();
             _activeState = state;
-            Debug.Log(_activeState);
             return state;
         }
 

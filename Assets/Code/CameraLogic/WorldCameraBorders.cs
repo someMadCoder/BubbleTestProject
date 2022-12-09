@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Code.Gun
+namespace Code.CameraLogic
 {
     public static class WorldCameraBorders
     {

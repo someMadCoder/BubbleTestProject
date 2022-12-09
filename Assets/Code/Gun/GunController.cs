@@ -1,4 +1,5 @@
 ﻿using System;
+using Code.CameraLogic;
 using Code.Infrastructure.Services;
 using Code.Services.Input;
 using Unity.VisualScripting;
@@ -17,6 +18,7 @@ namespace Code.Gun
             _camera = playerCamera;
             _inputService = inputService;
             SubscribeInputEvents();
+            transform.position = new Vector3(0, WorldCameraBorders.Bottom(_camera)+2, -1);
         }
 
         private void SubscribeInputEvents()
@@ -26,6 +28,17 @@ namespace Code.Gun
             _inputService.OnPointerUp += OnPointerUp;
         }
 
+        void Update()//to tests
+        {
+            if (Input.GetMouseButton(0))
+            {
+                OnDrag(Input.mousePosition);
+            }
+            if (Input.GetMouseButtonUp(0))
+            {
+                OnPointerUp(Input.mousePosition);
+            }
+        }
         private void OnPointerDown(Vector2 pointerPosition)
         {
             _gun.TurnOnLaser(pointerPosition);
@@ -33,6 +46,7 @@ namespace Code.Gun
 
         private void OnPointerUp(Vector2 pointerPosition)
         {
+            _gun.TryToShoot();
             _gun.TurnOffLaser();
         }
 
