@@ -5,11 +5,13 @@ using UnityEngine;
 
 namespace Code.BallGridLogic
 {
-    public class Ball : MonoBehaviour
+    public class Ball : MonoBehaviour, IBall
     {
+        public IBall[] Neighbours { get; set; } = new IBall[6];
         [field:SerializeField] public BallColor Color { get; set;}
-        public Ball[] Neighbours = new Ball[6];
         public BallGrid Grid { get; set; }
+        public Vector3 Position => transform.position;
+
 
         public void MoveAndAttachToGrid(Vector3[] wayPoints, float speed, BallGrid grid, Action onReach = null)
         {
@@ -46,9 +48,5 @@ namespace Code.BallGridLogic
             return length.magnitude;
         }
 
-        private void OnValidate()
-        {
-            //TODO: change sprite color 
-        }
     }
 }
