@@ -6,5 +6,6 @@
         public const string HUDPath = "Hud/Hud";
         public const string GunPath = "Gun/Gun";
         public const string CameraPath = "Camera/Camera";
+        public const string GridPath = "Grid/Grid";
     }
 }

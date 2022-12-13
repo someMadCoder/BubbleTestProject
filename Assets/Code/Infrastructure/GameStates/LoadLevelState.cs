@@ -30,6 +30,7 @@ namespace Code.Infrastructure.GameStates
             _gameFactory.CreateHUD();
             _gameFactory.CreateBackground();
             _gameFactory.CreateGun();
+            _gameFactory.CreateGrid();
             _stateMachine.Enter<GameLoopState, Level>(null);
         }
 

@@ -12,8 +12,9 @@ namespace Code.BallGridLogic
     public class BallGrid: MonoBehaviour
     {
         [SerializeField] private GameObject _estimatedHitMarker;
-        private Grid<IBall> _grid;
-
+        public Grid<IBall> _grid;
+        public IBall[] balls;
+        public Ball[] Balls;
         public void ShowEstimatedHitPosition(Vector2 point, Ball hitedBall)
         {
             _estimatedHitMarker.SetActive(true);
@@ -25,8 +26,9 @@ namespace Code.BallGridLogic
             
             Vector3[] possiblePositions = _grid.NeighboursPositionsOf(hitedBall.transform.position);
             Vector3[] unoccupiedPositions = 
-                possiblePositions.Where(pos => _grid.IsPositionFree(pos)).ToArray();
-
+                possiblePositions.Where(pos => _grid.IsPositionFree(pos)&&_grid.XPositionIsCorrect(pos.x)).ToArray();
+            if(unoccupiedPositions.Length==0)
+                throw new Exception("There is no unoccupied positions");
             Vector3 estimatedHitPosition = 
                 unoccupiedPositions.OrderBy(p => Vector3.Distance(p, point)).First();
             
@@ -69,6 +71,11 @@ namespace Code.BallGridLogic
            {
                
            }
+       }
+
+       public void AddBalls(IBall ball)
+       {
+           _grid.AttachElement(ball);
        }
        
         private List<Wave> FindSimilarBallsUnion(Ball addedBall)

@@ -1,14 +1,28 @@
 using System;
 using System.Linq;
 using DG.Tweening;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace Code.BallGridLogic
 {
     public class Ball : MonoBehaviour, IBall
     {
-        public IBall[] Neighbours { get; set; } = new IBall[6];
+
+        [NotNull]
+        public IBall[] Neighbours
+        {
+            get; //=> Neighbours1;
+            set;
+            // {
+            //     Neighbours = value ?? throw new ArgumentNullException(nameof(value));
+            //     Neighbours1= (Ball[])value;
+            // }
+        } = new IBall[6];
+
+        //public IBall[] Neighbours1 
         [field:SerializeField] public BallColor Color { get; set;}
+        public Vector2 Size => GetComponent<SpriteRenderer>().bounds.size;
         public BallGrid Grid { get; set; }
         public Vector3 Position => transform.position;
 

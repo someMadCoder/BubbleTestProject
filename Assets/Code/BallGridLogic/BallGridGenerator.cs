@@ -1,83 +1,129 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Code.CameraLogic;
+using TMPro;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Code.BallGridLogic
 {
     /// <summary>
     /// Generator working by wave function collapsed method
     /// </summary>
-    public class BallGridWFCGenerator
+    public class BallGridGenerator
     {
-        [SerializeField] private Ball _ballPrefab;
-        private List<Ball> _balls = new List<Ball>(100);
-        [field: SerializeField] private IBall _ball;
+        private readonly IBall[] _balls;
+        private readonly Grid<IBall> _grid;
+        private readonly int _maxElementsCount = 100;
+        private readonly BallGrid _ballGrid;
+        private readonly int _ballsNumberInWidth;
+        private readonly float _startLowestElementPosition;
 
-
-        public void Generate(int lines, params BallColor[] color)
+        public BallGridGenerator(IBall[] balls, BallGrid ballGrid, float startLowestElementPosition, int lines, int ballsNumberInWidth = 10)
         {
-            for(int x = 0; x<10; x++)
-            for (int y = 0; y < lines; y++)
+            _ballsNumberInWidth = ballsNumberInWidth;
+            _ballGrid = ballGrid;
+            _startLowestElementPosition = startLowestElementPosition;
+            _balls = balls;
+            _maxElementsCount = lines * ballsNumberInWidth;
+            //float height = ;
+            _grid = new Grid<IBall>(_maxElementsCount, _balls[0].Size,
+                _startLowestElementPosition, 0, lines * 1.25f);
+            _ballGrid._grid = _grid;
+        }
+
+        public void Generate(float worldSizeScreenWidth, params BallColor[] color)
+        {
+            var startPosition = StartGenerationElementPosition(worldSizeScreenWidth);
+
+            IBall ball = GameObject.Instantiate(_balls[0].gameObject, startPosition, Quaternion.identity)
+                .GetComponent<IBall>();
+            ball.Grid = _ballGrid;
+            //Construct(ball);
+            InstantiateSuitableNeighbours(ball);
+        }
+
+        private Vector3 StartGenerationElementPosition(float worldSizeScreenWidth)
+        {
+            float x = worldSizeScreenWidth - (((_ballsNumberInWidth) * _grid.XOffset));
+            Vector3 startPosition = new Vector3(WorldCameraBorders.Left(Camera.main) + x + _balls[0].Size.x / 2,
+                _startLowestElementPosition, 0);
+            return startPosition;
+        }
+
+        private void InstantiateSuitableNeighbours(IBall ball)
+        {
+            _grid.AttachElement(ball);
+            if (_grid.ElementsCount > _maxElementsCount)
+                return;
+
+            for (var n = 0; n < 6; n++)
             {
-                
-            }
-        }
-         private void Start()
-        {
-            // Invoke(nameof(DelayConstruct), 1);
-            // _ballSize = _ball.GetComponent<SpriteRenderer>().bounds.size;
-        }
+                Vector3 newBallPosition = _grid.GetNeighbourPosition(ball.Position, n);
+                IBall newBall = null;
+                if (_grid.IsPositionFreeAndCorrect(newBallPosition))
+                    if (ball.Neighbours.Count(n => n != null && n.Color == ball.Color) < 3)
+                    {
+                        newBall = ball.Neighbours[n] = InstantiateNeighbourFor
+                            (ball, newBallPosition);
+                        //InstantiateSuitableNeighbours(ball.Neighbours[n]);
+                    }
+                    else
+                    {
+                        newBall = InstantiateNeighbourFor(_balls[Random.Range(0, _balls.Length)], newBallPosition);
+                    }
 
-        private void DelayConstruct()
-        {
-            // Ball _originOfGrid = Instantiate(_ball, transform);
-            // Construct(_originOfGrid);
-            LinkSameBalls();
-        }
-
-        private void LinkSameBalls()
-        {
-            foreach (Ball ball in _balls)
-            {
-                for (int n = 0; n <= 5; n++)
+                if (newBall != null)
                 {
-                    // ball.Neighbours[n] = GetBallAt(ball.transform.position + _neighborsOffsets[n]);
+                    newBall.Grid = _ballGrid;
+                    InstantiateSuitableNeighbours(newBall);
+                }
+            }
+
+            // foreach (var neighbour in ball.Neighbours)
+            // {
+            //     if (neighbour != null)
+            //     {
+            //           
+            //         InstantiateSuitableNeighbours(neighbour);
+            //     }
+            // }
+        }
+
+        private IBall InstantiateNeighbourFor(IBall ball, Vector3 neighbourPosition)
+        {
+            return GameObject.Instantiate(ball.gameObject, neighbourPosition, Quaternion.identity)
+                .GetComponent<IBall>();
+        }
+
+        private void Construct(IBall origin)
+        {
+            _grid.AttachElement(origin);
+            if (_grid.ElementsCount > _maxElementsCount)
+                return;
+
+            for (int n = 0; n < 6; n += Random.Range(1, 3))
+            {
+                Vector3 newBallPosition = _grid.GetNeighbourPosition(origin.Position, n);
+                if (_grid.IsPositionFreeAndCorrect(newBallPosition))
+                {
+                    var newBall =
+                        InstantiateBallNeighbour(_balls[Random.Range(0, _balls.Length)], origin.Position,
+                            n); //InstantiateNeighbourFor(origin, newBallPosition);
+                    Construct(newBall);
                 }
             }
         }
-        private void Construct(Ball origin)
+
+
+        private IBall InstantiateBallNeighbour(IBall ball, Vector3 originBallPosition, int neighbourToCreateNumber)
         {
-            _balls.Add(origin);
-            // if(_balls.Count>_elementsCount)
-                return;
-            
-            for (int n = 0; n <= 5; n+=Random.Range(1,3))
-            {
-                // Vector3 newBallPosition = origin.transform.position + _neighborsOffsets[n];
-                // if (WidthBallPositionIsCorrect(newBallPosition.x) &&
-                //     HeightBallPositionIsCorrect(newBallPosition.y) &&
-                //     IsThereIsBallAt(origin.transform.position + _neighborsOffsets[n]) == false)
-                // {
-                //     var newBall = InstantiateBallNeighbour(origin.transform.position, n);
-                //     Construct(newBall);
-                // }
-            }
+            IBall newBall = GameObject.Instantiate(ball.gameObject,
+                    _grid.GetNeighbourPosition(originBallPosition, neighbourToCreateNumber), Quaternion.identity)
+                .GetComponent<IBall>();
+            newBall.gameObject.transform.SetParent(_ballGrid.transform);
+            return newBall;
         }
-
-
-        //private Ball InstantiateBallNeighbour(Vector3 originBallPosition, int neighbourToCreateNumber)
-        //{
-            // Ball newBall = GameObject.Instantiate(_ball, originBallPosition + _neighborsOffsets[neighbourToCreateNumber],
-            //     Quaternion.identity);
-            // newBall.transform.parent = transform;
-            // newBall.Grid = this;
-            // int color = Random.Range(0, 2);
-            // newBall.Color = (BallColor)color;
-            // if ((BallColor)color != BallColor.Yellow)
-            // {
-            //     newBall.GetComponent<SpriteRenderer>().color = Color.magenta;
-            // }
-            // return newBall;
-        //}
     }
-    
 }

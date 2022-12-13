@@ -1,4 +1,6 @@
-﻿using Code.Infrastructure.AssetManagement;
+﻿using Code.BallGridLogic;
+using Code.CameraLogic;
+using Code.Infrastructure.AssetManagement;
 using Code.Infrastructure.Services;
 using Code.Services.Input;
 using TMPro.EditorUtilities;
@@ -16,27 +18,29 @@ namespace Code.Infrastructure.Factory
         public void CreateBackground()
         {
             GameObject background = _assetProvider.Instantiate(AssetsPath.BackgroundPath);
-            background.GetComponent<Canvas>().worldCamera = GetCamera();
+            background.GetComponent<Canvas>().worldCamera = MainCamera;
         }
 
         public void CreateHUD() => _assetProvider.Instantiate(AssetsPath.HUDPath);
         public void CreateGun()
         {
-            Camera camera = GetCamera();
             GameObject gun = _assetProvider.Instantiate(AssetsPath.GunPath);
-            gun.GetComponent<Gun.GunController>().Init(camera, AllServices.Container.Single<IInputService>());
+            gun.GetComponent<Gun.GunController>().Init(MainCamera, AllServices.Container.Single<IInputService>());
         }
 
-        private Camera GetCamera()
+        public void CreateGrid()
         {
-            if(Camera.main!=null)
-                return Camera.main;
-            else
-            {
-                GameObject camera = _assetProvider.Instantiate(AssetsPath.CameraPath);
-                return camera.GetComponent<Camera>();
-            }
+            GameObject grid = _assetProvider.Instantiate(AssetsPath.GridPath);
+            float yPosition = MainCamera.transform.position.y;
+            float screenWidth = WorldCameraBorders.Right(MainCamera) - WorldCameraBorders.Left(MainCamera);
+            BallGridGenerator gridGenerator = new BallGridGenerator(grid.GetComponent<BallGrid>().Balls, grid.GetComponent<BallGrid>(), yPosition, 30);
+            gridGenerator.Generate(screenWidth,
+                BallColor.Blue, BallColor.Green, BallColor.Red, BallColor.Purple, BallColor.Yellow);
         }
+
+        private Camera MainCamera => Camera.main ? Camera.main : 
+            _assetProvider.Instantiate(AssetsPath.CameraPath).GetComponent<Camera>();
+
     }
 
 }
